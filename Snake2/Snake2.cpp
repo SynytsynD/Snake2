@@ -33,6 +33,7 @@ void PlayGround::DisplayFild()
 
 }
 
+
 int PlayableObject::GetX() const { return x; };
 int PlayableObject::GetY() const { return y; };
 int PlayableObject::SetX(int &x) { return this->x = x; };
@@ -46,11 +47,18 @@ Apple::Apple(PlayGround &field)
 	field.play_ground[y][x] = apple_sign; 
 }
 
-Snake::Snake(PlayGround &field)
+Snake::Snake(PlayGround& field)
 {
 	x = RandomPosition();
 	y = RandomPosition();
 	field.play_ground[y][x] = snake_sign; 
+}
+
+Snake::Snake(int& SetY, int& SetX, PlayGround& field)
+{
+	y = SetY;
+	x = SetX;
+	field.play_ground[y][x] = snake_sign;
 }
 
 
@@ -61,10 +69,13 @@ int main()
 	HideCursor();
 	ResetCursorPosition();
 
+
 	PlayGround field;
-	Snake snake(field);
+	Snake head(field); 
 	Apple apple(field);
 	Actions actions;
+	vector<Snake> snake;
+	snake.push_back(head);
 
 	thread th1(&PlayGround::DisplayFild, &field);
 	th1.detach();
