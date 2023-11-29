@@ -14,10 +14,12 @@ public:
 		X_POSITIVE,
 		X_NEGATIVE
 	};
-	void ChangePosition(Snake &snake, Apple& apple, PlayGround &field, Position &pos);
-	void Move(Snake& snake, Apple& apple, PlayGround& field);
-	void Eating(Snake& snake, Apple& apple, PlayGround& field);
+	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
+	void Move(vector<Snake>& snake, Apple& apple, PlayGround& field);
+	void Eating(vector<Snake>& snake, Apple& apple, PlayGround& field);
+	void SnakeGrowUp(vector<Snake>& snake, PlayGround& playfround, Position& pos);
 private:
+
 
 	int x;
 	int y;

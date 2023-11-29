@@ -48,11 +48,11 @@ class Snake : public PlayableObject
 {
 public:
 	Snake(PlayGround& field);
-	Snake(PlayableObject& y, PlayableObject& x);
+	Snake(int& SetY, int& SetX, PlayGround& field);
+
 
 private:
-	int length = 1;
-	vector<char> snake_length;
+
 };
 
 class Apple : public PlayableObject
