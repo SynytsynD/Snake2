@@ -1,66 +1,86 @@
-#include "Actions.h"
+﻿#include "Actions.h"
 
-void Actions::SnakeGrowUp(vector<Snake>& snake, PlayGround& field, Position& pos)
-{
-	
-}
-
-void Actions::Eating(vector<Snake>& snake, Apple& apple, PlayGround& field)
+void Actions::Eating(vector<Snake>& snake, int tailY , int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset)
 {
 	int ax = RandomPosition(); 
 	int ay = RandomPosition(); 
-	int sx = snake.back().GetX();
-	int sy = snake.back().GetY();
 	field.play_ground[apple.SetY(ay)][apple.SetX(ax)] = apple_sign;
-	Snake part(sy, sx, field);
 
+	Snake part(tailY, tailX, field);
 	snake.push_back(part);
+}
+
+void Actions::CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset)
+{
+	if (snake[0].GetY() == apple.GetY() && snake[0].GetX() == apple.GetX())
+		Eating(snake, snake.back().GetY(), snake.back().GetX(), apple, field, yOffset, xOffset); 
 }
 
 void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& field, Position& state)
 {
-	int x = snake.back().GetX();
-	int y = snake.back().GetY();
 	do
 	{
-		field.play_ground[y][x] = empty_sign;
-		if (state == Y_NEGATIVE)
+		int PreviousY;
+		int PreviousX;
+		int size = snake.size();
+		for (int i = 0; i < size; ++i)
 		{
-			for (int i = 0; i < snake.size(); ++i)
+			int x = snake[i].GetX();
+			int y = snake[i].GetY();
+
+			int yOffset = 0;
+			int xOffset = 0;
+			
+			if (i > 0 )
 			{
-				snake[i].SetY(--y);
-				field.play_ground[y][x] = snake_sign;
+				snake[i].SetY(PreviousY);
+				snake[i].SetX(PreviousX);
+				PreviousY = y;
+				PreviousX = x;
+				field.play_ground[snake[i].GetY()][snake[i].GetX()] = snake_sign;
+				field.play_ground[y][x] = empty_sign;
+				field.DisplayField();
+				continue;
 			}
-		}
-		else if (state == Y_POSITIVE)
-		{
-			for (int i = 0; i < snake.size(); ++i)
+
+			PreviousY = y;
+			PreviousX = x;
+
+			if (state == Y_NEGATIVE)
 			{
-				snake[i].SetY(++y);
-				field.play_ground[y][x] = snake_sign;
+				yOffset -= 1;
+				xOffset = 0;
 			}
-		}
-		else if (state == X_NEGATIVE)
-		{
-			for (int i = 0; i < snake.size(); ++i)
+			else if (state == Y_POSITIVE)
 			{
-				snake[i].SetX(--x);
-				field.play_ground[y][x] = snake_sign;
+				yOffset += 1;
+				xOffset = 0;
 			}
-		}
-		else if (state == X_POSITIVE)
-		{
-			for (int i = 0; i < snake.size(); ++i)
+			else if (state == X_NEGATIVE)
 			{
-				snake[i].SetX(++x);
-				field.play_ground[y][x] = snake_sign;
+				yOffset = 0;
+				xOffset -= 1;
 			}
+			else if (state == X_POSITIVE)
+			{
+				yOffset = 0;
+				xOffset += 1;
+			}
+
+			snake[i].SetY(y + yOffset);
+			snake[i].SetX(x + xOffset);
+			
+			field.play_ground[snake[i].GetY()][snake[i].GetX()] = snake_sign;
+			if (size == 1)
+			{
+				field.play_ground[y][x] = empty_sign;
+			}
+			field.DisplayField();
+
+			CheckForEating(snake, apple, field, yOffset, xOffset);
 		}
-		if (snake[0].GetY() == apple.GetY() && snake[0].GetX() == apple.GetX()) Eating(snake, apple, field);
-		
 		Sleep(200);
 	} while (!_kbhit());
-
 }
 
 void Actions::Move(vector<Snake>& snake, Apple& apple, PlayGround& field)
@@ -71,8 +91,6 @@ void Actions::Move(vector<Snake>& snake, Apple& apple, PlayGround& field)
 
 		if (_kbhit())
 		{
-			int x = snake[0].GetX();
-			int y = snake[0].GetY();
 			Position Y_N = Y_NEGATIVE; 
 			Position Y_P = Y_POSITIVE;
 			Position X_N = X_NEGATIVE;
@@ -81,7 +99,7 @@ void Actions::Move(vector<Snake>& snake, Apple& apple, PlayGround& field)
 			key = _getch();
 			switch (key)
 			{
-			case 'w': ChangePosition(snake, apple, field, Y_N );
+			case 'w': ChangePosition(snake, apple, field, Y_N);
 				break;
 			case 's': ChangePosition(snake, apple, field, Y_P);
 				break;
