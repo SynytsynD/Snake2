@@ -15,42 +15,41 @@ PlayGround::PlayGround()
 	}
 }
 
-void PlayGround::DisplayFild()
+void PlayGround::DisplayField()
 {	
-	do
+	system("cls");
+	for (int i = 0; i < PlayGround::hight; ++i)
 	{
-		Sleep(200);
-		system("cls");
-		for (int i = 0; i < PlayGround::hight; ++i)
+		cout << '\n';
+		for (int j = 0; j < PlayGround::width; ++j)
 		{
-			cout << '\n';
-			for (int j = 0; j < PlayGround::width; ++j)
-			{
-				cout << PlayGround::play_ground[i][j];
-			}
+			cout << PlayGround::play_ground[i][j];
 		}
-	} while (true);
-
+	}
 }
-
 
 int PlayableObject::GetX() const { return x; };
 int PlayableObject::GetY() const { return y; };
-int PlayableObject::SetX(int &x) { return this->x = x; };
-int PlayableObject::SetY(int &y) { return this->y = y; };
+int PlayableObject::SetX(int x) { return this->x = x; };
+int PlayableObject::SetY(int y) { return this->y = y; };
 
 Apple::Apple(PlayGround &field)
 {	
-	x = RandomPosition();
-	y = RandomPosition();
+
+	x = 12;
+	y = 10;
+	//x = RandomPosition();
+	//y = RandomPosition();
 
 	field.play_ground[y][x] = apple_sign; 
 }
 
 Snake::Snake(PlayGround& field)
 {
-	x = RandomPosition();
-	y = RandomPosition();
+	x = 12;
+	y = 12;
+	//x = RandomPosition();
+	//y = RandomPosition();
 	field.play_ground[y][x] = snake_sign; 
 }
 
@@ -69,16 +68,14 @@ int main()
 	HideCursor();
 	ResetCursorPosition();
 
-
 	PlayGround field;
 	Snake head(field); 
 	Apple apple(field);
 	Actions actions;
 	vector<Snake> snake;
 	snake.push_back(head);
+	field.DisplayField();
 
-	thread th1(&PlayGround::DisplayFild, &field);
-	th1.detach();
 
 	actions.Move(snake, apple, field);
 }	

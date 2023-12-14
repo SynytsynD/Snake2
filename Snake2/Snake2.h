@@ -22,7 +22,7 @@ public:
 	friend class Snake;
 	friend class Actions;
 	PlayGround();
-	void DisplayFild();
+	void DisplayField();
 private:
 	const int hight = 26;
 	const int width = 26;
@@ -36,8 +36,8 @@ public:
 	friend class Snake;
 	int GetX() const;
 	int GetY() const;
-	int SetX(int &x);
-	int SetY(int &y);
+	int SetX(int x);
+	int SetY(int y);
 
 private:
 	int x;

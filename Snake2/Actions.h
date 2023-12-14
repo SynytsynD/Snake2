@@ -2,8 +2,6 @@
 #include "Snake2.h"
 #include "Tools.h"
 
-
-
 class Actions
 {
 public:
@@ -16,11 +14,10 @@ public:
 	};
 	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
 	void Move(vector<Snake>& snake, Apple& apple, PlayGround& field);
-	void Eating(vector<Snake>& snake, Apple& apple, PlayGround& field);
-	void SnakeGrowUp(vector<Snake>& snake, PlayGround& playfround, Position& pos);
+	void Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset);
+	void CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset);
+
 private:
-
-
 	int x;
 	int y;
 };
