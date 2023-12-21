@@ -14,7 +14,7 @@ public:
 	};
 	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
 	void Move(vector<Snake>& snake, Apple& apple, PlayGround& field);
-	void Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset);
+	void Eating(vector<Snake>& snake, int tailX, int tailY, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 	void CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 
 private:

@@ -9,6 +9,8 @@
 
 int RandomPosition()
 {
-
-	return 1 + rand() % 24;
+	int y = 1 + rand() % 24;
+	int x = 1 + rand() % 24;
+	int XY = 26 * y + x;
+	return XY;
 }
