@@ -4,11 +4,15 @@
 #include <thread>
 #include <conio.h>
 #include <Windows.h>
+#include <array>
 
 using std::cin;
 using std::cout;
 using std::vector;
 using std::thread;
+using std::array;
+
+ #define BorderSize 26
 
 const char snake_sign = '*';
 const char apple_sign = '@';
@@ -23,10 +27,9 @@ public:
 	friend class Actions;
 	PlayGround();
 	void DisplayField();
+
 private:
-	const int hight = 26;
-	const int width = 26;
-	vector<vector<char>> play_ground;
+	array<char, BorderSize* BorderSize> APlayGround;
 };
 
 class PlayableObject 
@@ -34,12 +37,16 @@ class PlayableObject
 public: 
 	friend class Apple;
 	friend class Snake;
-	int GetX() const;
 	int GetY() const;
-	int SetX(int x);
+	int GetX() const;
+	int GetXY() const;
 	int SetY(int y);
+	int SetX(int x);
+	int SetXY(int XY);
+	int calcXY(int y, int x);
 
 private:
+	int XY;
 	int x;
 	int y;
 };
@@ -48,11 +55,9 @@ class Snake : public PlayableObject
 {
 public:
 	Snake(PlayGround& field);
-	Snake(int& SetY, int& SetX, PlayGround& field);
-
+	Snake(int& SetY, int & SetX, PlayGround& field);
 
 private:
-
 };
 
 class Apple : public PlayableObject
