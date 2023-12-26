@@ -44,7 +44,7 @@ void PlayGround::DisplayField()
 
 int PlayableObject::GetY() const { return y; }
 int PlayableObject::GetX() const { return x; }
-int PlayableObject::GetXY() const { return XY; }
+int PlayableObject::GetXY(int y, int x) const { return BorderSize * y + x; }
 int PlayableObject::SetY(int y) { return this->y = y; }
 int PlayableObject::SetX(int x) { return this->x = x; }
 int PlayableObject::SetXY(int XY) { return this->XY = XY; }

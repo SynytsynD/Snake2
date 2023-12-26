@@ -2,19 +2,19 @@
 
 void Actions::Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset)
 {
-	field.APlayGround[apple.SetXY(RandomPosition())] = apple_sign;
+	field.APlayGround[apple.calcXY(apple.SetY(RandomPosition()), apple.SetX(RandomPosition()))] = apple_sign;
 	Snake part(tailY, tailX, field);
 	snake.push_back(part);
 }
 
 void Actions::CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset)
 {
-	if (snake[0].GetXY() == apple.GetXY())
+	if (snake[0].GetXY(snake[0].GetY(), snake[0].GetX()) == apple.GetXY(apple.GetY(), apple.GetX()))
 		Eating(snake, snake.back().GetY(), snake.back().GetX(), apple, field, yOffset, xOffset);
 }
 
 void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& field, Position& state)
-{
+{ 
 	do
 	{
 		int PreviousY;
@@ -34,9 +34,13 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 				snake[i].SetX(PreviousX);
 				PreviousY = y;
 				PreviousX = x;
-				field.APlayGround[snake[i].calcXY(snake[i].GetY(), snake[i].GetX())] = snake_sign;
-				field.APlayGround[snake[i].calcXY(y, x)] = empty_sign;
-				field.DisplayField();
+				//field.APlayGround[snake[i].calcXY(snake[i].GetY(), snake[i].GetX())] = snake_sign;
+				if (i == snake.size() - 1)
+				{
+					field.APlayGround[snake[i].calcXY(y, x)] = empty_sign;
+					field.DisplayField();
+				}
+
 				continue;
 			}
 
@@ -64,6 +68,7 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 			snake[i].SetX(x + xOffset);
 			
 			field.APlayGround[snake[i].calcXY(snake[i].GetY(), snake[i].GetX())] = snake_sign;
+			//field.DisplayField();
 			if (size == 1)
 			{
 				field.APlayGround[snake[i].calcXY(y, x)] = empty_sign;

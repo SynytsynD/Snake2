@@ -20,5 +20,6 @@ public:
 private:
 	int x;
 	int y;
+	bool eat = false;
 };
 
