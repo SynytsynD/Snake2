@@ -39,7 +39,7 @@ public:
 	friend class Snake;
 	int GetY() const;
 	int GetX() const;
-	int GetXY() const;
+	int GetXY(int y, int x) const;
 	int SetY(int y);
 	int SetX(int x);
 	int SetXY(int XY);
