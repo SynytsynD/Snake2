@@ -1,10 +1,20 @@
 #pragma once
 #include "Snake2.h"
 #include "Tools.h"
+#include "Menu.h"
 
 class Actions
 {
 public:
+	enum KEY
+	{
+		Up =	72,
+		Down =	80,
+		Left =	75,
+		Right =	77,
+		Tab =	9
+	};
+
 	enum Position
 	{
 		Y_POSITIVE,
@@ -13,7 +23,7 @@ public:
 		X_NEGATIVE
 	};
 	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
-	void Move(vector<Snake>& snake, Apple& apple, PlayGround& field);
+	void ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field, Menu &Mani);
 	void Eating(vector<Snake>& snake, int tailX, int tailY, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 	void CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 

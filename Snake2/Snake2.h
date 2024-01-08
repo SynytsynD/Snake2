@@ -63,5 +63,6 @@ private:
 class Apple : public PlayableObject
 {
 public:
+	Apple();
 	Apple(PlayGround& field);
 };

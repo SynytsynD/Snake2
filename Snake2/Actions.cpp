@@ -1,5 +1,6 @@
 ﻿#include "Actions.h"
 
+
 void Actions::Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset)
 {
 	field.APlayGround[apple.calcXY(apple.SetY(RandomPosition()), apple.SetX(RandomPosition()))] = apple_sign;
@@ -34,7 +35,6 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 				snake[i].SetX(PreviousX);
 				PreviousY = y;
 				PreviousX = x;
-				//field.APlayGround[snake[i].calcXY(snake[i].GetY(), snake[i].GetX())] = snake_sign;
 				if (i == snake.size() - 1)
 				{
 					field.APlayGround[snake[i].calcXY(y, x)] = empty_sign;
@@ -68,7 +68,6 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 			snake[i].SetX(x + xOffset);
 			
 			field.APlayGround[snake[i].calcXY(snake[i].GetY(), snake[i].GetX())] = snake_sign;
-			//field.DisplayField();
 			if (size == 1)
 			{
 				field.APlayGround[snake[i].calcXY(y, x)] = empty_sign;
@@ -81,7 +80,7 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 	} while (!_kbhit());
 }
 
-void Actions::Move(vector<Snake>& snake, Apple& apple, PlayGround& field)
+void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field, Menu &MainMenu)
 {
 	while (true)
 	{
@@ -97,13 +96,18 @@ void Actions::Move(vector<Snake>& snake, Apple& apple, PlayGround& field)
 			key = _getch();
 			switch (key)
 			{
-			case 'w': ChangePosition(snake, apple, field, Y_N);
+			case Up: ChangePosition(snake, apple, field, Y_N);
 				break;
-			case 's': ChangePosition(snake, apple, field, Y_P);
+			case Down: ChangePosition(snake, apple, field, Y_P);
 				break;
-			case 'a': ChangePosition(snake, apple, field, X_N);
+			case Left: ChangePosition(snake, apple, field, X_N);
 				break;
-			case 'd': ChangePosition(snake, apple, field, X_P);
+			case Right: ChangePosition(snake, apple, field, X_P);
+				break;
+			case Tab:
+				MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
+				MainMenu.Navigate(MainMenu, BeginMenuNumber, MainMenuNumber);
+				field.DisplayField();
 				break;
 			}
 		}

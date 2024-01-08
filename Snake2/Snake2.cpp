@@ -1,6 +1,8 @@
 #include "Actions.h"
 #include "Console.h"
 #include "Tools.h"
+#include "Menu.h"
+
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
@@ -50,6 +52,10 @@ int PlayableObject::SetX(int x) { return this->x = x; }
 int PlayableObject::SetXY(int XY) { return this->XY = XY; }
 int PlayableObject::calcXY(int y, int x){ return XY = BorderSize * y + x; }
 
+Apple::Apple()
+{
+
+}
 
 Apple::Apple(PlayGround &field)
 {	
@@ -79,7 +85,6 @@ Snake::Snake(int& SetY, int& SetX, PlayGround& field)
 	field.APlayGround[Snake::calcXY(SetY, SetX)] = snake_sign;
 }
 
-
 int main()
 {
 	srand(time(NULL));
@@ -87,14 +92,8 @@ int main()
 	HideCursor();
 	ResetCursorPosition();
 
-	PlayGround field;
-	Snake head(field); 
-	Apple apple(field);
-	Actions actions;
-	vector<Snake> snake;
-	snake.push_back(head);
-	field.DisplayField();
+	Menu MainMenu;
+	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
+	MainMenu.Navigate(MainMenu, BeginMenuNumber, MainMenuNumber);
 
-
-	actions.Move(snake, apple, field);
 }	
