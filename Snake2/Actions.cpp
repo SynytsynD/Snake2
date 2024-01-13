@@ -14,6 +14,27 @@ void Actions::CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& fie
 		Eating(snake, snake.back().GetY(), snake.back().GetX(), apple, field, yOffset, xOffset);
 }
 
+void Actions::CheckForWallCrush(int SnakeY, int SnakeX)
+{
+	if (SnakeY == 0 || SnakeY == 26 || SnakeX == 0 || SnakeX == 26)
+	{
+		cout << "GAME LOSE!\n";
+		system("pause");
+	}
+}
+
+void Actions::CheckForSnakeCrush(vector<Snake>& snake)
+{
+	for (int i = 4; i < snake.size(); ++i)
+	{
+		if (snake[0].GetX() == snake[i].GetX() && snake[0].GetY() == snake[i].GetY())
+		{
+			cout << " CE SHLIAPA TU PROHRAV!";
+			system("pause");
+		}
+	}
+}
+
 void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& field, Position& state)
 { 
 	do
@@ -75,6 +96,8 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 			field.DisplayField();
 
 			CheckForEating(snake, apple, field, yOffset, xOffset);
+			CheckForWallCrush(snake[0].GetY(), snake[0].GetX());
+			CheckForSnakeCrush(snake);
 		}
 		Sleep(200);
 	} while (!_kbhit());
@@ -82,37 +105,64 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 
 void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, PlayGround& field, Menu &MainMenu)
 {
+	bool canMoveUp = true;
+	bool canMoveDown = true;
+	bool canMoveLeft = true;
+	bool canMoveRight = true;
 	while (true)
 	{
 		char key;
-		char PreviousKey;
+		static char PreviousKey;
 
-		if (_kbhit())
-		{	
-			Position Y_N = Y_NEGATIVE; 
-			Position Y_P = Y_POSITIVE;
-			Position X_N = X_NEGATIVE;
-			Position X_P = X_POSITIVE;
+		Position Y_N = Y_NEGATIVE; 
+		Position Y_P = Y_POSITIVE;
+		Position X_N = X_NEGATIVE;
+		Position X_P = X_POSITIVE;
 
-			key = _getch();
-			switch (key)
-			{
-				PreviousKey = key;
+		key = _getch();
+		if (PreviousKey == Up && key == Down) key = Up;
+		if (PreviousKey == Down && key == Up) key = Down;
+		if (PreviousKey == Left && key == Right) key = Left;
+		if (PreviousKey == Right && key == Left) key = Right;
 
-			case Up: ChangePosition(snake, apple, field, Y_N);
-				break;
-			case Down: ChangePosition(snake, apple, field, Y_P);
-				break;
-			case Left: ChangePosition(snake, apple, field, X_N);
-				break;
-			case Right: ChangePosition(snake, apple, field, X_P);
-				break;
-			case Tab:
-				MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
-				MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
-				field.DisplayField();
-				break;
-			}
+		if (key == Up) 
+		{
+			canMoveDown = false;
+			canMoveLeft = true;
+			canMoveRight = true;
+			PreviousKey = key;
+			ChangePosition(snake, apple, field, Y_N);
+		}
+		else if (key == Down)
+		{
+			canMoveUp = false;
+			canMoveLeft = true;
+			canMoveRight = true;
+			PreviousKey = key;
+			ChangePosition(snake, apple, field, Y_P);
+		}
+		else if (key == Left && canMoveLeft) 
+		{
+			canMoveUp = true;
+			canMoveDown = true;
+			canMoveRight = false;
+			PreviousKey = key;
+			ChangePosition(snake, apple, field, X_N);
+		}
+		else if (key == Right && canMoveRight) 
+		{
+			canMoveUp = true;
+			canMoveDown = true;
+			canMoveLeft = false;
+			PreviousKey = key;
+			ChangePosition(snake, apple, field, X_P);
+		}
+		else if (key == Tab)
+		{
+			MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
+			MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
+			field.DisplayField();
+			break;
 		}
 	}
 }

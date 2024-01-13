@@ -28,7 +28,7 @@ void PlayGround::ClearPlayGround()
 			APlayGround[rez - 1] = wall_sign;
 			APlayGround[rez - BorderSize] = wall_sign;
 			if (i > 0 && i < BorderSize || i > APlayGround.size() - BorderSize && i < APlayGround.size())
-				APlayGround[i] = wall_sign;
+			APlayGround[i] = wall_sign;
 		}
 	}
 }
@@ -102,24 +102,13 @@ int main()
 	ResetCursorPosition();
 
 	Menu MainMenu;
-
 	PlayGround field;
-
 	Snake head(field);
-
 	Apple apple(field);
-
 	vector<Snake> snake;
 	Actions actions;
 
-
-
 	snake.push_back(head);
-	//field.DisplayField();
 	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
-	//actions.ButtonAction(snake, apple, actions, field, MainMenu);
 	MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
-
-
-
 }	
