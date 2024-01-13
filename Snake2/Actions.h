@@ -23,7 +23,7 @@ public:
 		X_NEGATIVE
 	};
 	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
-	void ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field, Menu &Mani);
+	void ButtonAction(vector<Snake>& snake, Apple& apple, Actions acctions, PlayGround& field, Menu &Menu);
 	void Eating(vector<Snake>& snake, int tailX, int tailY, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 	void CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 

@@ -80,14 +80,15 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 	} while (!_kbhit());
 }
 
-void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field, Menu &MainMenu)
+void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, PlayGround& field, Menu &MainMenu)
 {
 	while (true)
 	{
 		char key;
+		char PreviousKey;
 
 		if (_kbhit())
-		{
+		{	
 			Position Y_N = Y_NEGATIVE; 
 			Position Y_P = Y_POSITIVE;
 			Position X_N = X_NEGATIVE;
@@ -96,6 +97,8 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field
 			key = _getch();
 			switch (key)
 			{
+				PreviousKey = key;
+
 			case Up: ChangePosition(snake, apple, field, Y_N);
 				break;
 			case Down: ChangePosition(snake, apple, field, Y_P);
@@ -106,7 +109,7 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, PlayGround& field
 				break;
 			case Tab:
 				MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
-				MainMenu.Navigate(MainMenu, BeginMenuNumber, MainMenuNumber);
+				MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
 				field.DisplayField();
 				break;
 			}
