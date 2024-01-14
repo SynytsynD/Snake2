@@ -110,16 +110,10 @@ int main()
 	Apple apple(field);
 
 	vector<Snake> snake;
+
 	Actions actions;
 
-
-
 	snake.push_back(head);
-	//field.DisplayField();
 	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
-	//actions.ButtonAction(snake, apple, actions, field, MainMenu);
 	MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
-
-
-
 }	

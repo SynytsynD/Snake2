@@ -85,7 +85,7 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, 
 	while (true)
 	{
 		char key;
-		char PreviousKey;
+		static char PreviousKey;
 
 		if (_kbhit())
 		{	
@@ -95,17 +95,29 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, 
 			Position X_P = X_POSITIVE;
 
 			key = _getch();
+
+			if (PreviousKey == Up && key == Down) key = Up;
+			if (PreviousKey == Down && key == Up) key = Down;
+			if (PreviousKey == Left && key == Right) key = Left;
+			if (PreviousKey == Right && key == Left) key = Right;
+
 			switch (key)
 			{
+			case Up: 
 				PreviousKey = key;
-
-			case Up: ChangePosition(snake, apple, field, Y_N);
+				ChangePosition(snake, apple, field, Y_N);
 				break;
-			case Down: ChangePosition(snake, apple, field, Y_P);
+			case Down: 
+				PreviousKey = key;
+				ChangePosition(snake, apple, field, Y_P);
 				break;
-			case Left: ChangePosition(snake, apple, field, X_N);
+			case Left: 
+				PreviousKey = key;
+				ChangePosition(snake, apple, field, X_N);
 				break;
-			case Right: ChangePosition(snake, apple, field, X_P);
+			case Right: 
+				PreviousKey = key;
+				ChangePosition(snake, apple, field, X_P);
 				break;
 			case Tab:
 				MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
