@@ -64,10 +64,9 @@ public:
 	Snake();
 	Snake(PlayGround& field);
 	Snake(int& SetY, int & SetX, PlayGround& field);
-	
+
 private:
 };
-
 
 class Apple : public PlayableObject
 {
