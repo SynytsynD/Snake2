@@ -1,6 +1,6 @@
-SnakeCoordinates[0]: 20 16 536 
-SnakeCoordinates[1]: 20 17 537 
-SnakeCoordinates[2]: 20 18 538 
-SnakeCoordinates[3]: 20 19 539 
-SnakeCoordinates[4]: 20 20 540 
-AppleCoordinates: 24 4 628
+Direction: P 
+SnakeCoordinates[0]: 12 17 329 
+SnakeCoordinates[1]: 11 17 303 
+SnakeCoordinates[2]: 10 17 277 
+SnakeCoordinates[3]: 9 17 251 
+AppleCoordinates: 5 1 131

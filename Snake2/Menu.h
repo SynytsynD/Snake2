@@ -37,8 +37,8 @@ public:
 	void ShowMenu(int FirstMenuItem, int LastMenuItem);
 	void Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actions actions, Apple apple, int FirstMenuItem, int LastMenuItem);
 	void MoveArrow(int count, int FirstMenuItem, int LastMenuItem);
-	void SaveGame(vector<Snake>* A_Snake, Apple* V_Apple);
-	void LoadGame(vector<Snake>* A_Snake, Apple* V_Apple);
+	void SaveGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions);
+	void LoadGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions);
 
 private:
 	//vector<Snake>* SaveSnake = new vector<Snake>;

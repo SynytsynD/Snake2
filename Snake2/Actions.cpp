@@ -1,5 +1,15 @@
 ﻿#include "Actions.h"
 
+char Actions::GetPreviousButtonKey()
+{
+	return PreviousButtonKey;
+}
+
+void Actions::SetPreviousButtonKey(char Direction)
+{
+	PreviousButtonKey = Direction;
+	cout << "ky";
+}
 
 void Actions::Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset)
 {
@@ -23,8 +33,8 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 		int size = snake.size();
 		for (int i = 0; i < size; ++i)
 		{
-			int y = snake[i].GetY();
-			int x = snake[i].GetX();
+			 y = snake[i].GetY();
+			 x = snake[i].GetX();
 
 			int yOffset = 0;
 			int xOffset = 0;
@@ -82,41 +92,42 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 
 void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, PlayGround& field, Menu &MainMenu)
 {
+	
+
 	while (true)
 	{
-		char key;
-		static char PreviousKey;
 
 		if (_kbhit())
 		{	
+			
 			Position Y_N = Y_NEGATIVE; 
 			Position Y_P = Y_POSITIVE;
 			Position X_N = X_NEGATIVE;
 			Position X_P = X_POSITIVE;
 
-			key = _getch();
+			ButtonKey = _getch();
 
-			if (PreviousKey == Up && key == Down) key = Up;
-			if (PreviousKey == Down && key == Up) key = Down;
-			if (PreviousKey == Left && key == Right) key = Left;
-			if (PreviousKey == Right && key == Left) key = Right;
+			if (actions.PreviousButtonKey == Up && ButtonKey == Down) ButtonKey = Up;
+			else if (actions.PreviousButtonKey == Down && ButtonKey == Up) ButtonKey = Down;
+			else if (actions.PreviousButtonKey == Left && ButtonKey == Right) ButtonKey = Left;
+			else if (actions.PreviousButtonKey == Right && ButtonKey == Left) ButtonKey = Right;
 
-			switch (key)
+			switch (ButtonKey)
 			{
 			case Up: 
-				PreviousKey = key;
+				actions.PreviousButtonKey = ButtonKey;
 				ChangePosition(snake, apple, field, Y_N);
 				break;
 			case Down: 
-				PreviousKey = key;
+				actions.PreviousButtonKey = ButtonKey;
 				ChangePosition(snake, apple, field, Y_P);
 				break;
 			case Left: 
-				PreviousKey = key;
+				actions.PreviousButtonKey = ButtonKey;
 				ChangePosition(snake, apple, field, X_N);
 				break;
 			case Right: 
-				PreviousKey = key;
+				actions.PreviousButtonKey = ButtonKey;
 				ChangePosition(snake, apple, field, X_P);
 				break;
 			case Tab:
