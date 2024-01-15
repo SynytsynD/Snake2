@@ -19,8 +19,6 @@ const char apple_sign = '@';
 const char empty_sign = ' ';
 const char wall_sign = '#';
 
-
-
 class PlayGround
 {
 public:

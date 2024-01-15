@@ -19,7 +19,7 @@ void Menu::MoveArrow(int count, int FirstMenuItem, int LastMenuItem)
 	ShowMenu(FirstMenuItem, LastMenuItem);
 }
 
-void Menu::SaveGame(vector<Snake> *A_Snake, Apple *V_Apple)
+void Menu::SaveGame(vector<Snake> *A_Snake, Apple *V_Apple, Actions& actions)
 {
 
 	stream.open(PathToSaveFile, std::ofstream::out | std::ofstream::trunc);
@@ -30,6 +30,8 @@ void Menu::SaveGame(vector<Snake> *A_Snake, Apple *V_Apple)
 	}
 	else 
 	{
+		stream << "Direction: " << actions.GetPreviousButtonKey() << " \n";
+
 		for (int i = 0; i < A_Snake->size(); ++i)
 		{
 			stream << "SnakeCoordinates[" << i <<"]: " << (*A_Snake)[i].GetY() << " " << (*A_Snake)[i].GetX() << " " << (*A_Snake)[i].GetXY((*A_Snake)[i].GetY(), (*A_Snake)[i].GetX()) << " \n";
@@ -41,7 +43,7 @@ void Menu::SaveGame(vector<Snake> *A_Snake, Apple *V_Apple)
 	stream.close();
 }
 
-void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple)
+void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions)
 {
 	stream.open(PathToSaveFile);
 
@@ -62,6 +64,15 @@ void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple)
 			getline(stream, tmpstr);
 
 			size_t pos = tmpstr.find(" ")+1;
+
+			if (tmpstr.find("Direction") != -1)
+			{
+				pos = tmpstr.find(" ") + 1;
+				tmpstr = tmpstr.substr(pos);
+				const char *chat_to_convert = tmpstr.c_str();
+				actions.SetPreviousButtonKey((*chat_to_convert));
+				cout << "key";
+			}
 
 			if (tmpstr.find("SnakeCoordinates") != -1)
 			{ 
@@ -96,7 +107,6 @@ void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple)
 	}
 	stream.close();
 }
-
 
 void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actions actions, Apple apple, int FirstMenuItem, int LastMenuItem)
 {
@@ -161,13 +171,14 @@ void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actio
 			}
 			else if (ArrowPosition == SaveCell)
 			{
-				SaveGame(&snake, &apple);
+				SaveGame(&snake, &apple, actions);
 				break;
 			}
 			else if (ArrowPosition == Load)
 			{
-				LoadGame(&snake, &apple);
+				LoadGame(&snake, &apple, actions);
 				field.ClearPlayGround();
+
 				for (int i = 0; i < snake.size(); ++i)
 				{
 					snake[i].SetObject(field, snake[i].GetY(), snake[i].GetX(), snake_sign);

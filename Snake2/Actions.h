@@ -22,12 +22,17 @@ public:
 		X_POSITIVE,
 		X_NEGATIVE
 	};
+
 	void ChangePosition(vector<Snake>&snake, Apple& apple, PlayGround &field, Position &pos);
 	void ButtonAction(vector<Snake>& snake, Apple& apple, Actions acctions, PlayGround& field, Menu &Menu);
 	void Eating(vector<Snake>& snake, int tailX, int tailY, Apple& apple, PlayGround& field, int yOffset, int xOffset);
 	void CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& field, int yOffset, int xOffset);
+	char GetPreviousButtonKey();
+	void SetPreviousButtonKey(char Direction);
 
 private:
+	char ButtonKey;
+	char PreviousButtonKey = NULL;
 	int x;
 	int y;
 	bool eat = false;
