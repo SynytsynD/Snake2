@@ -8,7 +8,17 @@ char Actions::GetPreviousButtonKey()
 void Actions::SetPreviousButtonKey(char Direction)
 {
 	PreviousButtonKey = Direction;
-	cout << "ky";
+}
+
+int Actions::CheckCollisionSnakeToWall(int SnakeY, int SnakeX) 
+{
+	if (SnakeY == 0 || SnakeY == 26 || SnakeX == 0 || SnakeX == 26) 
+	{
+		cout << "\nGAME LOSE!";
+		system("pause");
+		return 1;
+	}
+	return 0;
 }
 
 void Actions::Eating(vector<Snake>& snake, int tailY, int tailX, Apple& apple, PlayGround& field, int yOffset, int xOffset)
@@ -24,10 +34,12 @@ void Actions::CheckForEating(vector<Snake>& snake, Apple& apple, PlayGround& fie
 		Eating(snake, snake.back().GetY(), snake.back().GetX(), apple, field, yOffset, xOffset);
 }
 
-void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& field, Position& state)
-{ 
+int Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& field, Position& state)
+{
+	int False = 0;
 	do
 	{
+		
 		int PreviousY;
 		int PreviousX;
 		int size = snake.size();
@@ -84,29 +96,31 @@ void Actions::ChangePosition(vector<Snake>& snake, Apple& apple, PlayGround& fie
 			}
 			field.DisplayField();
 
+			False = CheckCollisionSnakeToWall(snake[0].GetY(), snake[0].GetX());
+			if (False == 1) return 1;
 			CheckForEating(snake, apple, field, yOffset, xOffset);
 		}
 		Sleep(200);
 	} while (!_kbhit());
+	 return 0;
 }
 
 void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, PlayGround& field, Menu &MainMenu)
 {
-	
+	int BackToMenuByLose = 0;
 
-	while (true)
+	while (!BackToMenuByLose)
 	{
 
-		if (_kbhit())
-		{	
-			
+		//if (_kbhit())
+		//{	
+
 			Position Y_N = Y_NEGATIVE; 
 			Position Y_P = Y_POSITIVE;
 			Position X_N = X_NEGATIVE;
 			Position X_P = X_POSITIVE;
 
 			ButtonKey = _getch();
-
 			if (actions.PreviousButtonKey == Up && ButtonKey == Down) ButtonKey = Up;
 			else if (actions.PreviousButtonKey == Down && ButtonKey == Up) ButtonKey = Down;
 			else if (actions.PreviousButtonKey == Left && ButtonKey == Right) ButtonKey = Left;
@@ -116,19 +130,19 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, 
 			{
 			case Up: 
 				actions.PreviousButtonKey = ButtonKey;
-				ChangePosition(snake, apple, field, Y_N);
+				BackToMenuByLose = ChangePosition(snake, apple, field, Y_N);
 				break;
 			case Down: 
 				actions.PreviousButtonKey = ButtonKey;
-				ChangePosition(snake, apple, field, Y_P);
+				BackToMenuByLose = ChangePosition(snake, apple, field, Y_P);
 				break;
 			case Left: 
 				actions.PreviousButtonKey = ButtonKey;
-				ChangePosition(snake, apple, field, X_N);
+				BackToMenuByLose = ChangePosition(snake, apple, field, X_N);
 				break;
 			case Right: 
 				actions.PreviousButtonKey = ButtonKey;
-				ChangePosition(snake, apple, field, X_P);
+				BackToMenuByLose = ChangePosition(snake, apple, field, X_P);
 				break;
 			case Tab:
 				MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
@@ -136,7 +150,8 @@ void Actions::ButtonAction(vector<Snake>& snake, Apple& apple, Actions actions, 
 				field.DisplayField();
 				break;
 			}
-		}
 	}
+	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
+	MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
 }
 
