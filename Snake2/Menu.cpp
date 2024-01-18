@@ -19,10 +19,10 @@ void Menu::MoveArrow(int count, int FirstMenuItem, int LastMenuItem)
 	ShowMenu(FirstMenuItem, LastMenuItem);
 }
 
-void Menu::SaveGame(vector<Snake>* A_Snake, Apple* V_Apple)
+void Menu::SaveGame(vector<Snake> *A_Snake, Apple *V_Apple, Actions& actions)
 {
 
-	stream.open(PathToSaveFile);
+	stream.open(PathToSaveFile, std::ofstream::out | std::ofstream::trunc);
 
 	if (!stream.is_open()) 
 	{
@@ -30,14 +30,20 @@ void Menu::SaveGame(vector<Snake>* A_Snake, Apple* V_Apple)
 	}
 	else 
 	{
-		stream.write((char*)&A_Snake, sizeof(Snake));
-		stream.write((char*)&V_Apple, sizeof(Apple));
-	}
+		stream << "Direction: " << actions.GetPreviousButtonKey() << " \n";
 
+		for (int i = 0; i < A_Snake->size(); ++i)
+		{
+			stream << "SnakeCoordinates[" << i <<"]: " << (*A_Snake)[i].GetY() << " " << (*A_Snake)[i].GetX() << " " << (*A_Snake)[i].GetXY((*A_Snake)[i].GetY(), (*A_Snake)[i].GetX()) << " \n";
+		}
+
+		stream << "AppleCoordinates: " << (*V_Apple).GetY() << " " << (*V_Apple).GetX() << " " << (*V_Apple).GetXY((*V_Apple).GetY(), (*V_Apple).GetX());
+	}
+	
 	stream.close();
 }
 
-void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple)
+void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions)
 {
 	stream.open(PathToSaveFile);
 
@@ -47,21 +53,65 @@ void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple)
 	}
 	else
 	{
-		stream.read((char*)&A_Snake, sizeof(Snake));
-		cout << (*A_Snake)[0].GetX() << " | "  << (*A_Snake)[0].GetY() << "\n";
+		string tmpstr;
+		int A_Snake_iterator = 0;
+		A_Snake->clear();
+		while (!stream.eof())
+		{
+			int i = 0;
+			int jumpTo = 0;
+			tmpstr = "";
+			getline(stream, tmpstr);
 
-		stream.read((char*)&V_Apple, sizeof(Apple));
-		cout << (*V_Apple).GetX() << " | " << (*V_Apple).GetY() << "\n";
+			size_t pos = tmpstr.find(" ")+1;
 
+			if (tmpstr.find("Direction") != -1)
+			{
+				pos = tmpstr.find(" ") + 1;
+				tmpstr = tmpstr.substr(pos);
+				const char *chat_to_convert = tmpstr.c_str();
+				actions.SetPreviousButtonKey((*chat_to_convert));
+				cout << "key";
+			}
+
+			if (tmpstr.find("SnakeCoordinates") != -1)
+			{ 
+				int i = 0;
+				A_Snake->push_back(Snake());
+				while (tmpstr.find(" ") && jumpTo >= 0)
+				{
+					++i;
+					pos = tmpstr.find(" ") + 1;
+					tmpstr = tmpstr.substr(pos);
+					jumpTo = tmpstr.find(" ");
+					if (i == 1) (*A_Snake)[A_Snake_iterator].SetY(std::stoi(tmpstr.substr(0, jumpTo)));
+					else if (i == 2)(*A_Snake)[A_Snake_iterator].SetX(std::stoi(tmpstr.substr(0, jumpTo)));
+					else if (i == 3)(*A_Snake)[A_Snake_iterator].SetXY(std::stoi(tmpstr.substr(0, jumpTo)));
+				}
+				A_Snake_iterator++;
+			}
+			else if (tmpstr.find("AppleCoordinates") != -1)
+			{
+				while (tmpstr.find(" ") && jumpTo >= 0)
+				{
+					++i;
+					pos = tmpstr.find(" ") + 1;
+					tmpstr = tmpstr.substr(pos);
+					jumpTo = tmpstr.find(" ");
+					if (i == 1) (*V_Apple).SetY(std::stoi(tmpstr.substr(0, jumpTo)));
+					else if (i == 2)(*V_Apple).SetX(std::stoi(tmpstr.substr(0, jumpTo)));
+					else if (i == 3)(*V_Apple).SetXY(std::stoi(tmpstr.substr(0, jumpTo)));
+				}
+			}
+		}
 	}
-
 	stream.close();
 }
 
-
-void Menu::Navigate(Menu& MainMenu, int FirstMenuItem, int LastMenuItem)
+void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actions actions, Apple apple, int FirstMenuItem, int LastMenuItem)
 {
 	bool game = false;
+	bool gameStart = false;
 	while (!game)
 	{
 		switch (_getch())
@@ -73,27 +123,33 @@ void Menu::Navigate(Menu& MainMenu, int FirstMenuItem, int LastMenuItem)
 			MoveArrow(-1, FirstMenuItem, LastMenuItem);
 			break;
 		case Enter:
+			gameStart == true;
 			if (ArrowPosition == NewGame)
 			{
-				PlayGround field;
+				if (snake.size() > 1)
+				{
+					for (int it = snake.size(); it > 1; --it)
+					{
+						snake.pop_back();
+					}
+				}
 
-				Snake head(field);
+				field.ClearPlayGround();
 
-				Apple apple(field);
-				SaveApple = &apple;
+				snake[0].SetX(12);
+				snake[0].SetY(12);
+				snake[0].SetObject(field, snake[0].GetY(), snake[0].GetX(), snake_sign);
 
-				vector<Snake> snake;
-				SaveSnake = &snake;
+				apple.SetY(10);
+				apple.SetX(12);
+				apple.SetObject(field, apple.GetY(), apple.GetX(), apple_sign);
 
-				snake.push_back(head);
 				field.DisplayField();
+				actions.ButtonAction(snake, apple, actions, field, MainMenu);
 
-				Actions actions;
-				actions.ButtonAction(snake, apple, field, MainMenu);
-					
 				break;
 			}
-			else if (ArrowPosition == Continue)
+			else if (ArrowPosition == Continue && gameStart == true )
 			{
 				game = true;
 			}
@@ -117,12 +173,22 @@ void Menu::Navigate(Menu& MainMenu, int FirstMenuItem, int LastMenuItem)
 			}
 			else if (ArrowPosition == SaveCell)
 			{
-				SaveGame(SaveSnake, SaveApple);
+				SaveGame(&snake, &apple, actions);
 				break;
 			}
 			else if (ArrowPosition == Load)
 			{
-				LoadGame(SaveSnake, SaveApple);
+				LoadGame(&snake, &apple, actions);
+				field.ClearPlayGround();
+
+				for (int i = 0; i < snake.size(); ++i)
+				{
+					snake[i].SetObject(field, snake[i].GetY(), snake[i].GetX(), snake_sign);
+				}
+				apple.SetObject(field, apple.GetY(), apple.GetX(), apple_sign);
+				field.DisplayField();
+				actions.ButtonAction(snake, apple, actions, field, MainMenu);
+
 				break;
 			}
 		}

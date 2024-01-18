@@ -4,12 +4,14 @@
 #include <conio.h>
 #include "Snake2.h"
 #include <fstream>
+#include <string>
 
 using std::cin;
 using std::cout;
 using std::string;
 using std::array;
 using std::fstream;
+using std::getline;
 
 #define AllMenuNumber 6
 #define MainMenuNumber 3
@@ -33,15 +35,14 @@ class Menu
 {
 public:
 	void ShowMenu(int FirstMenuItem, int LastMenuItem);
-	void Navigate(Menu& MainMenu, int FirstMenuItem, int LastMenuItem);
+	void Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actions actions, Apple apple, int FirstMenuItem, int LastMenuItem);
 	void MoveArrow(int count, int FirstMenuItem, int LastMenuItem);
-	void SaveGame(vector<Snake>* A_Snake, Apple* V_Apple);
-	void LoadGame(vector<Snake>* A_Snake, Apple* V_Apple);
+	void SaveGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions);
+	void LoadGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions);
 
 private:
-	vector<Snake>* SaveSnake = new vector<Snake>;
-
-	Apple* SaveApple = new Apple;
+	//vector<Snake>* SaveSnake = new vector<Snake>;
+	//Apple* SaveApple = new Apple;
 
 	string Arrow = ">";
 	string Empty = " ";

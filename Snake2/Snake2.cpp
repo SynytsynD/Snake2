@@ -13,7 +13,7 @@ void GotoXY()
 	SetConsoleCursorPosition(console, CursorPosition);
 }
 
-PlayGround::PlayGround()
+void PlayGround::ClearPlayGround()
 {
 	APlayGround.fill(empty_sign);
 
@@ -27,10 +27,15 @@ PlayGround::PlayGround()
 			k++;
 			APlayGround[rez - 1] = wall_sign;
 			APlayGround[rez - BorderSize] = wall_sign;
-			if (i > 0 && i < BorderSize || i > APlayGround.size() - BorderSize && i < APlayGround.size()) 
-			APlayGround[i] = wall_sign;
+			if (i > 0 && i < BorderSize || i > APlayGround.size() - BorderSize && i < APlayGround.size())
+				APlayGround[i] = wall_sign;
 		}
 	}
+}
+
+PlayGround::PlayGround()
+{
+	ClearPlayGround();
 }
 
 void PlayGround::DisplayField()
@@ -52,6 +57,14 @@ int PlayableObject::SetX(int x) { return this->x = x; }
 int PlayableObject::SetXY(int XY) { return this->XY = XY; }
 int PlayableObject::calcXY(int y, int x){ return XY = BorderSize * y + x; }
 
+void PlayableObject::SetObject(PlayGround& field, int Y, int X, char sign_object)
+{
+	//x = RandomPosition();
+	//y = RandomPosition();
+	XY = BorderSize * Y + X;
+	field.APlayGround[XY] = sign_object;
+}
+
 Apple::Apple()
 {
 
@@ -59,22 +72,18 @@ Apple::Apple()
 
 Apple::Apple(PlayGround &field)
 {	
-	x = 12;
-	y = 10;
-	//x = RandomPosition();
-	//y = RandomPosition();
-	XY = BorderSize * y + x;
-	field.APlayGround[XY] = apple_sign;
+	//SetObject(field, 10, 12, apple_sign);
+}
+
+Snake::Snake()
+{
+
 }
 
 Snake::Snake(PlayGround& field)
 {
-	x = 12;
-	y = 12;
-	//x = RandomPosition();
-	//y = RandomPosition();
-	XY = BorderSize * y + x;
-	field.APlayGround[XY] = snake_sign;
+	//SetObject(field, 12, 12, snake_sign);
+
 }
 
 Snake::Snake(int& SetY, int& SetX, PlayGround& field)
@@ -82,7 +91,7 @@ Snake::Snake(int& SetY, int& SetX, PlayGround& field)
 	x = SetX;
 	y = SetY;
 	XY = Snake::calcXY(SetY, SetX);
-	field.APlayGround[Snake::calcXY(SetY, SetX)] = snake_sign;
+	field.APlayGround[XY] = snake_sign;
 }
 
 int main()
@@ -93,7 +102,18 @@ int main()
 	ResetCursorPosition();
 
 	Menu MainMenu;
-	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
-	MainMenu.Navigate(MainMenu, BeginMenuNumber, MainMenuNumber);
 
+	PlayGround field;
+
+	Snake head(field);
+
+	Apple apple(field);
+
+	vector<Snake> snake;
+
+	Actions actions;
+
+	snake.push_back(head);
+	MainMenu.ShowMenu(BeginMenuNumber, MainMenuNumber);
+	MainMenu.Navigate(MainMenu, snake, field, actions, apple, BeginMenuNumber, MainMenuNumber);
 }	
