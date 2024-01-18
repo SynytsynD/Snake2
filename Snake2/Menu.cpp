@@ -111,6 +111,7 @@ void Menu::LoadGame(vector<Snake>* A_Snake, Apple* V_Apple, Actions& actions)
 void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actions actions, Apple apple, int FirstMenuItem, int LastMenuItem)
 {
 	bool game = false;
+	bool gameStart = false;
 	while (!game)
 	{
 		switch (_getch())
@@ -122,6 +123,7 @@ void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actio
 			MoveArrow(-1, FirstMenuItem, LastMenuItem);
 			break;
 		case Enter:
+			gameStart == true;
 			if (ArrowPosition == NewGame)
 			{
 				if (snake.size() > 1)
@@ -147,7 +149,7 @@ void Menu::Navigate(Menu& MainMenu, vector<Snake> snake, PlayGround field, Actio
 
 				break;
 			}
-			else if (ArrowPosition == Continue)
+			else if (ArrowPosition == Continue && gameStart == true )
 			{
 				game = true;
 			}
